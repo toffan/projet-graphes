@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+
+% {{{ Header
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{french}
+
+%Packages divers
+\usepackage[left=35mm, right=35mm]{geometry}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{caption}
+
+
+% Formatage des titres
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries\raggedright}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\raggedright}{}{0em}{}[\titlerule]
+\titleformat{\subsubsection}{\large\bfseries\raggedright}{}{0em}{}
+
+
+  % {{{ Environnements mathématique
+\usepackage{amsmath}
+\newenvironment{system}[1]
+  {\left\{\begin{array}{#1}}
+  {\end{array}\right.}
+  % }}}
+% }}}
+
+% {{{ Templates
+  % {{{ Figures
+% figure classique
+% \begin{figure}[!h]
+%   \begin{center}
+%     \includegraphics[width=\0.7linewidth]{fig/}
+%     \caption{}
+%   \end{center}
+% \end{figure}
+
+% figures cote à cote
+% \begin{figure}[!h]
+%   \begin{center}
+%     \begin{minipage}[b]{0.4\textwidth}
+%       \includegraphics[width=\textwidth]{fig/}
+%       \caption{}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}[b]{0.4\textwidth}
+%       \includegraphics[width=\textwidth]{fig/}
+%       \caption{}
+%     \end{minipage}
+%   \end{center}
+% \end{figure}
+
+% figure dans un environnement multicol
+% \begin{center}
+%   \includegraphics[width=0.9\linewidth]{}
+%   \captionof{figure}{}
+% \end{center}
+  % }}}
+% }}}
+
+
+\title{Théorie des graphes\\
+Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
+\author{Volodia \textsc{Laniel}, Benoit \textsc{Lemarchand}}
+\date{\today}
+
+\begin{document}
+
+\begin{titlepage}
+  \maketitle
+  \vfill
+  \tableofcontents
+\end{titlepage}
+
+\section*{Introduction}
+% {{{
+% }}}
+\section{Compréhension et modélisation}
+% {{{
+% }}}
+\section{Ordonnancement séquentiel}
+% {{{
+% }}}
+\section{Ordonnancement parallèle}
+% {{{
+% }}}
+\section{Ordonnancement parallèle sous contrainte}
+% {{{
+% }}}
+\section*{Conclusion}
+% {{{
+% }}}
+
+\end{document}
