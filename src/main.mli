@@ -1,4 +1,4 @@
-
+open Dag
 (* entrees:
    - un DAG
    sorties:
