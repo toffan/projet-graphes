@@ -1,4 +1,4 @@
-TEXC = latexmk -lualatex -output-directory=build
+TEXC = latexmk -lualatex -output-directory=build -shell-escape
 
 .PHONY: FORCE
 
