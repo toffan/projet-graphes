@@ -145,6 +145,53 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
 % }}}
 \section{Ordonnancement séquentiel}
 % {{{
+  \subsection{Question 4}
+    Dans le cas d'un ordonnancement séquentiel, l'ensemble des opérations sont
+    effectuées par un unique coeur et le graphe est à un unique point en
+    mémoire. Ainsi, il n'y a plus de coût de communication, le temps d'exécution
+    est donc linéaire en le nombre de tâches à exécuter. De plus, le coeur étant
+    seul, il lui suffit d'effectuer les tâches en respectant la chaine de
+    dépendances.
+
+  \subsection{Question 5}
+    Premièrement, les trois états données forment bien une partition de
+    l'ensemble des noeuds, c'est à dire que tout noeud appartient à un unique
+    état.
+
+    Notre algorithme nous fait traiter ces trois états de la manière suivante
+    \begin{itemize}
+      \item \emph{noeud numéroté} \\
+        Le noeud appartient à $Z$, son ordre a été défini.
+      \item \emph{noeud non numéroté, avec tous ses prédécesseurs numérotés} \\
+        Le noeud appartient à $Y$, il est en attente numération.
+      \item \emph{noeud non numéroté, avec des prédécesseurs non numérotés} \\
+        Le noeud n'est ni dans $Z$, ni dans $Y$, il appartient donc à $X$.
+    \end{itemize}
+
+    L'ordre topologique est garanti par le fait qu'un noeud ne sera numéroté ssi
+    tous ses prédécesseurs ont été numérotés et ont reçu un numéro inférieur.
+    Ainsi, tout noeud du graphe sera supérieur à ses prédécesseurs.
+
+    L'ordre total est garanti par le fait qu'un noeud sera numéroté si tous ses
+    prédécesseurs l'on été. On peut ainsi en déduire par induction et parce que
+    notre graphe est acyclique que tout noeud sera numéroté.
+
+    La fonction $Succ()$ est appelée une unique fois par noeud dans la boucle
+    principale, soit une complexité $\mathcal{O}(c n)$. Or pour chacun de ces
+    successeurs, la fonction $Pred()$ est appelée. On approxime la nombre moyen
+    de successeurs d'un noeud à $\frac{m}{n}$, d'où un complexité totale de
+    $\mathcal{O}(c n \cdot c \frac{m}{n}) = \mathcal{O}(c^2 m)$. Puisque nous
+    parlons en notation de Lagrange, la constante $c^2$ pourrait être négligée.
+
+  \subsection{Question 6}
+    L'utilisation d'une pile pour $Y$ induit un parcours en profondeur alors que
+    l'utilisation d'une file induit un parcours en largeur.
+
+  \subsection{Question 7}
+    \begin{minted}{ocaml}
+(* code *)
+let f = fun x y -> x + y;;
+    \end{minted}
 % }}}
 \section{Ordonnancement parallèle}
 % {{{
