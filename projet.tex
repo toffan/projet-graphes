@@ -74,11 +74,70 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
   \tableofcontents
 \end{titlepage}
 
-\section*{Introduction}
-% {{{
-% }}}
 \section{Compréhension et modélisation}
 % {{{
+  \subsection{Question 1}
+    On représente le problème posé sous la forme d'un DAG dans lequel
+    \begin{itemize}
+      \item les noeuds représentent les opérations de \emph{edge collapse} ou
+        \emph{vertex split} de notre maillage.
+      \item une opération dépend d'une autre ssi la seconde a modifié des noeuds
+        de notre maillage dont la faisabilité de la première opération dépend.
+        Plus simplement, une opération ne peut avoir lieu que si la liste des
+        noeuds impliqués est à jour.
+      % \item les noeuds représentent les noeuds qui existaient, existent ou
+      %   existeront dans notre maillage.
+      % \item un noeud dépend d'un autre ssi la création ou destruction de ce
+      %   premier requière la présence du second. Plus simplement, une opération
+      %   ne peut avoir lieu que si la liste des noeuds impliqués est à jour.
+    \end{itemize}
+
+  \subsection{Question 2}
+    On commence par colorer notre graphe en fonction des coeurs qui effectueront
+    les opérations. Le coup en communication pour un noeud en particulier sera
+    donc fonction du nombre de noeuds dont dépend celui-ci et qui ne sont pas
+    de la même couleur. Ainsi le coup en communication $p_i$ pour un noeud $v_i$
+    de couleur $c_i$ et de taille $s_i$ est
+    \[ p_i = \sum_{\substack{v_j \in Pred(v_i) \\ c_j \neq c_i}}{s_j} \]
+
+    D'une part, l'équilibrage de charge se traduit par le fait que les couleurs
+    de notre graphe sont à peu près équitablement distribuées en nombre, de
+    sorte que chaque coeur effectue un travail à peu près similaire. D'autre
+    part, pour réduire le coup en communication de notre graphe, on cherchera a
+    mettre de la même couleur des sections de graphes fortement liées. Ainsi, un
+    coeur ne communiquera pas outre mesure avec les autres coeurs car la plupart
+    de ses dépendances ont été traitées par lui-même.
+
+    % TODO (bonus)
+
+  \subsection{Question 3}
+    Si un processeur commet une faute mais est immédiatement capable de la
+    détecter alors il suffit de rejouer la tâche corrompue. En effet, le
+    coeur est en mesure de conserver les paramètres initiaux de la tâche,
+    vérifier si celle-ci s'est correctement exécutée puis de la rejouer si
+    celle-ci s'avère fausse.
+
+    \begin{center}
+      \rule{0.5\linewidth}{0.1mm}
+
+      \emph{On supposera par la suite que la détection d'erreur n'est pas
+      immédiate mais ne se produit qu'après la transmission du résultat.}
+    \end{center}
+
+    Si un processeur commet une faute alors tous les successeurs de la tâche
+    corrompue doivent être recalculés. Cependant, puisque les résultats
+    intermédiaires ne sont pas conservés alors l'ensemble des prédécesseurs des
+    successeurs de ce noeud doit être traité à nouveau, soit à peu près tout le
+    graphe.  Si on nomme $v$ le noeud corrompu, alors l'ensemble des noeuds à
+    recalculer est $Pred^{*}(Succ^{*}(v))$.
+
+    Si l'ensemble des résultats sont stockés alors seul l'ensemble des résultats
+    potentiellement corrompus est à recalculer, soit $Succ^{*}(v)$ que nous
+    allons approximer.
+    Soit $n = \#\mathcal{V}$ et $m = \#\mathcal{E}$ alors chaque noeud possède
+    en moyenne $\frac{m}{n}$ successeurs.
+
+    % TODO
 % }}}
 \section{Ordonnancement séquentiel}
 % {{{
@@ -87,9 +146,6 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
 % {{{
 % }}}
 \section{Ordonnancement parallèle sous contrainte}
-% {{{
-% }}}
-\section*{Conclusion}
 % {{{
 % }}}
 
