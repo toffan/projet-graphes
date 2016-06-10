@@ -29,7 +29,7 @@ let tri_topologique dag =
         match y with
         (* Si y est vide alors le calcul est terminé et le résultat est dans z. *)
         | [] -> z
-        | vi::q -> (
+        | vi::yq -> (
                 (Printf.printf "Traitement de (%d -> %d) : %s : %d\n" (Mark.get vi) mark (Dag.DAG.Display.vertex_name vi) (Dag.Vertex.memory (V.label vi)));
                 Mark.set vi mark;
                 (* zp : z à l'étape suivante.
@@ -39,6 +39,6 @@ let tri_topologique dag =
                     (* ls : liste des successeurs de vi (dans dag). *)
                     let ls = succ dag vi in
                     (* Calcul du nouvel ensemble Y. *)
-                    List.fold_right (inclusion_aux zp) ls y)
+                    List.fold_right (inclusion_aux zp) ls yq)
                 in tri_rec yp zp (mark+1)))
     in tri_rec y z 1;;
