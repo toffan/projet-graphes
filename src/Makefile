@@ -1,5 +1,7 @@
 CC=ocamlc
-LDFLAGS=-I /ocamlgraph/ graph.cma
+INTERP=ledit ocaml
+OCAMLGRAPH_LIB=/ocamlgraph/
+LDFLAGS=-I $(OCAMLGRAPH_LIB) graph.cma
 CFLAGS=$(LDFLAGS)
 EXEC=dag_test
 
@@ -13,6 +15,9 @@ dag_test: dag.cmo dag_test.cmo
 
 main: dag.cmo main.cmo
 	$(CC) $(LDFLAGS) -o $@ $^
+
+test: dag.cmo main.cmo
+	$(INTERP) $(LDFLAGS) $^
 
 main.cmo: main.cmi
 
