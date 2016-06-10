@@ -237,4 +237,29 @@ add_edge dag4 vu4 vn4;;
 
 dot_output dag4 "dag4.dot";;
 
+(* Exemple donné dans le sujet. *)
+let dag_sujet = create();;
+
+let vas = V.create("a",1);;
+let vbs = V.create("b",1);;
+let vcs = V.create("c",1);;
+let vds = V.create("d",1);;
+let ves = V.create("e",1);;
+let vfs = V.create("f",1);;
+
+add_vertex dag_sujet vas;;
+add_vertex dag_sujet vbs;;
+add_vertex dag_sujet vcs;;
+add_vertex dag_sujet vds;;
+add_vertex dag_sujet ves;;
+add_vertex dag_sujet vfs;;
+
+add_edge dag_sujet vas vds;;
+add_edge dag_sujet vbs vds;;
+add_edge dag_sujet vbs ves;;
+add_edge dag_sujet vcs ves;;
+add_edge dag_sujet vds vfs;;
+add_edge dag_sujet ves vfs;;
+
+dot_output dag_sujet "dag_sujet.dot";;
 
