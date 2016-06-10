@@ -3,21 +3,25 @@ INTERP=ledit ocaml
 OCAMLGRAPH_LIB=/ocamlgraph/
 LDFLAGS=-I $(OCAMLGRAPH_LIB) graph.cma
 CFLAGS=$(LDFLAGS)
-EXEC=dag_test
+EXEC=main_test
+EXECS=dag_test main_test
 
-all: $(EXEC)
+all: $(EXECS)
 
-run: $(EXEC)
+test: $(EXEC)
 	./$(EXEC)
 
 dag_test: dag.cmo dag_test.cmo
 	$(CC) $(LDFLAGS) -o $@ $^
 
-main: dag.cmo main.cmo
+main_test: dag.cmo dag_test.cmo main.cmo main_test.cmo
 	$(CC) $(LDFLAGS) -o $@ $^
 
-test: dag.cmo main.cmo
+debug: dag.cmo dag_test.cmo main.cmo
 	$(INTERP) $(LDFLAGS) $^
+
+#main: dag.cmo main.cmo
+#	$(CC) $(LDFLAGS) -o $@ $^
 
 main.cmo: main.cmi
 
@@ -33,4 +37,4 @@ clean:
 	rm -rf *.cmo *.cmi *.dot
 
 mrproper: clean
-	rm -rf $(EXEC)
+	rm -rf $(EXECS)
