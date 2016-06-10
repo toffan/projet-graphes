@@ -7,21 +7,21 @@ let list_root_vertex g = fold_vertex
     ) g [];;
 
 let tri_topologique dag =
-    let inclusion_aux z v y =
-        (* Liste des prédecesseurs de v dans dag. *)
-        let lp = pred dag v in
-        if (List.fold_right (fun v add ->
-            add && (
-                let res = List.find_all (fun w -> w = v) z in
-                (res = [])
-            )
-        ) lp true)
-        then (
-            (Printf.printf "Ajoute %d : %s : %d\n" (Mark.get v) (Dag.DAG.Display.vertex_name v) (Dag.Vertex.memory (V.label v)));
-            v::y)
-        else (
-            (Printf.printf "Ignore %d : %s : %d\n" (Mark.get v) (Dag.DAG.Display.vertex_name v) (Dag.Vertex.memory (V.label v)));
-        y)
+    let inclusion_aux z vj y = (
+        (* Liste des prédecesseurs de vj dans dag. *)
+        let lp = pred dag vj in (
+            if (List.fold_right (fun v add ->
+                add && (
+                    ((List.find_all (fun w -> w = v) z) != [])
+                )
+            ) lp true)
+            then (
+                (Printf.printf "Ajoute %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj)));
+                vj::y)
+            else (
+                (Printf.printf "Ignore %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj)));
+            y)
+        ))
 
     in let y = list_root_vertex dag and z = [] in
 
