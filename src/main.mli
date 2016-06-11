@@ -35,7 +35,7 @@ val ordonnanceur_sans_heuristique : int -> DAG.t -> trace
    - pas de contrainte mémoire (section 3)
    - vous utiliserez une heuristique pour ameliorer la duree de la trace
    *)
-(*val ordonnanceur_avec_heuristique : int -> DAG.t -> trace*)
+val ordonnanceur_avec_heuristique : int -> DAG.t -> trace
 
 (* entrees:
    - un nombre entier de ressources r
