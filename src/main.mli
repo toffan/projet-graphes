@@ -11,7 +11,7 @@ val tri_topologique : DAG.t -> DAG.vertex list
 (* trace d'execution
    definie en Section 2 de l'enonce (voir Figure 2)
 *)
-(*type trace = (DAG.vertex list) list*)
+type trace = (DAG.vertex list) list
 
 (* entrees:
    - un nombre entier de ressources r
@@ -23,7 +23,7 @@ val tri_topologique : DAG.t -> DAG.vertex list
    - pas de contrainte mémoire (section 3)
    - vous n'utiliserez pas d'heuristique
    *)
-(*val ordonnanceur_sans_heuristique : int -> DAG.t -> trace*)
+val ordonnanceur_sans_heuristique : int -> DAG.t -> trace
 
 (* entrees:
    - un nombre entier de ressources r

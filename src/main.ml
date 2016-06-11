@@ -42,3 +42,32 @@ let tri_topologique dag =
                     List.fold_right (inclusion_aux zp) ls yq)
                 in tri_rec yp zp (mark+1)))
     in tri_rec y z 1;;
+
+type trace = (Dag.DAG.vertex list) list
+
+(* entrees:
+   - un DAG dag
+   - un noeud v
+   - une liste de noeuds l
+   sorties:
+   - vrai si l contient au moins un prédecesseur de v (dans dag).
+   - faux sinon.
+   *)
+let depend dag v l =
+    let vp = pred dag v in
+    (* Calcul de l'intersection de l et vp. *)
+    List.fold_right (fun e res ->
+        res || ((List.find_all (fun x -> x = e) l) != [])
+    ) vp false;;
+
+let ordonnanceur_sans_heuristique r dag =
+    let l = tri_topologique dag in
+    List.fold_right (fun v trace ->
+        let current = List.hd trace in
+        (* Si v a un parent dans current OU si length(current)>=r, on fait un nouvel étage.*)
+        if ((List.length current) >= r || (depend dag v l)) then
+            [v]::trace
+        else
+            (v::current)::(List.tl trace)
+    ) l [[]];;
+
