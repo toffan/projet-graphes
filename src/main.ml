@@ -16,10 +16,10 @@ let tri_topologique dag =
                 )
             ) lp true)
             then (
-                (Printf.printf "Ajoute %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj)));
+                (*Printf.printf "Ajoute %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj));*)
                 y@[vj])
             else (
-                (Printf.printf "Ignore %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj)));
+                (*Printf.printf "Ignore %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj));*)
             y)
         ))
 
@@ -30,7 +30,7 @@ let tri_topologique dag =
         (* Si y est vide alors le calcul est terminé et le résultat est dans z. *)
         | [] -> z
         | vi::yq -> (
-                (Printf.printf "Traitement de (%d -> %d) : %s : %d\n" (Mark.get vi) mark (Dag.DAG.Display.vertex_name vi) (Dag.Vertex.memory (V.label vi)));
+                (*Printf.printf "Traitement de (%d -> %d) : %s : %d\n" (Mark.get vi) mark (Dag.DAG.Display.vertex_name vi) (Dag.Vertex.memory (V.label vi));*)
                 Mark.set vi mark;
                 (* zp : z à l'étape suivante.
                  * yp : y à l'étape suivante. *)
