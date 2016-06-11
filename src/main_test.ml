@@ -6,15 +6,25 @@ let afficher_liste name l =
     List.iter (fun v -> Printf.printf "%d : (%s:%d)\n" (Mark.get v) (Dag.DAG.Display.vertex_name v) (Dag.Vertex.memory (V.label v))) l;
     Printf.printf "--------------- Fin d'affichage de : %s ---------------\n" name;;
 
-let tri_dag1 = tri_topologique (Dag_test.dag1);;
-let tri_dag2 = tri_topologique (Dag_test.dag2);;
-let tri_dag3 = tri_topologique (Dag_test.dag3);;
-let tri_dag4 = tri_topologique (Dag_test.dag4);;
-let tri_dag_sujet = tri_topologique (Dag_test.dag_sujet);;
+let afficher_trace name l =
+    Printf.printf "--------------- Affichage de : %s ---------------\n" name;
+    List.iter (fun step ->
+    List.iter (fun v -> Printf.printf "%d : (%s:%d)\n" (Mark.get v) (Dag.DAG.Display.vertex_name v) (Dag.Vertex.memory (V.label v))) step;
+    Printf.printf "\n";) l;
+    Printf.printf "--------------- Fin d'affichage de : %s ---------------\n" name;;
 
-afficher_liste "Tri de dag1" tri_dag1;;
-afficher_liste "Tri de dag2" tri_dag2;;
-afficher_liste "Tri de dag3" tri_dag3;;
-afficher_liste "Tri de dag4" tri_dag4;;
-afficher_liste "Tri de dag_sujet" tri_dag_sujet;;
+let dag = Dag_test.dag_sujet and name = "dag_sujet";;
+let r = 3 and m = 3;;
+
+let tri_dag = tri_topologique dag;;
+let ord_sh_dag = ordonnanceur_sans_heuristique r dag;;
+let ord_ah_dag = ordonnanceur_avec_heuristique r dag;;
+let ord_cm_dag = ordonnanceur_contrainte_memoire r m dag;;
+(*let ord_cm_ah_dag = ordonnanceur_contrainte_memoire_bonus r m dag;;*)
+
+afficher_liste (String.concat "" ["Tri de "; name]) tri_dag;;
+afficher_trace (String.concat "" ["Ordonnancement sans heuristique de "; name]) ord_sh_dag;;
+afficher_trace (String.concat "" ["Ordonnancement avec heuristique de "; name]) ord_ah_dag;;
+afficher_trace (String.concat "" ["Ordonnancement avec contrainte mémoire de "; name]) ord_cm_dag;;
+(*afficher_trace (String.concat "" ["Ordonnancement avec contrainte mémoire et heuristique de "; name]) ord_cm_ah_dag;;*)
 
