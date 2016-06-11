@@ -7,7 +7,7 @@ let list_root_vertex g = fold_vertex
     ) g [];;
 
 let tri_topologique dag =
-    let inclusion_aux z vj y = (
+    let inclusion_aux z y vj = (
         (* Liste des prédecesseurs de vj dans dag. *)
         let lp = pred dag vj in (
             if (List.fold_right (fun v add ->
@@ -39,7 +39,7 @@ let tri_topologique dag =
                     (* ls : liste des successeurs de vi (dans dag). *)
                     let ls = succ dag vi in
                     (* Calcul du nouvel ensemble Y. *)
-                    List.fold_right (inclusion_aux zp) ls yq)
+                    List.fold_left (inclusion_aux zp) yq ls)
                 in tri_rec yp zp (mark+1)))
     in tri_rec y z 1;;
 
