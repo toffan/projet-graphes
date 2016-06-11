@@ -123,7 +123,24 @@ let dependances_satisfaites dag v l =
         res && ((List.find_all (fun x -> x = e) l) != [])
     ) vp true;;
 
-let ordonnanceur_avec_heuristique r dag =
+(* Entrées :
+   - une liste de noeuds step.
+   Sorties :
+   - La somme des mémoires requises par chaque noeud de step. *)
+let mem_sum step =
+    List.fold_right (fun v m ->
+        let mv = (Dag.Vertex.memory (V.label v)) in (m + mv)
+        ) step 0;;
+
+
+(* Entrées:
+   - un nombre entier de ressources r
+   - memoire disponible m ou 0 si l'on se place dans le cas sans contraintes de mémoire.
+   - un DAG
+   Sorties:
+   - une trace d'execution du DAG
+   *)
+let ordonnanceur_avec_heuristique_et_memoire r m dag =
     let l = tri_topologique dag in (
         (* Marque les noeuds en fonction de leur chemin critique. *)
         marque_chemin_critique dag;
@@ -148,7 +165,15 @@ let ordonnanceur_avec_heuristique r dag =
                 let (current,surplus) =
                     List.fold_right (fun v accu ->
                         let (c,s) = accu in
-                        if List.length c < r then (c@[v],s)
+                        if List.length c < r then (
+                            if m > 0 then (
+                                if (mem_sum c + Dag.Vertex.memory (V.label v)) <= m then
+                                    (c@[v],s)
+                                else
+                                    (c,s@[v])
+                            )
+                            else (c@[v],s)
+                        )
                         else (c,s@[v])
                     ) ready ([],[])
                 in aux (surplus@next) (current::trace))
@@ -159,4 +184,10 @@ let ordonnanceur_avec_heuristique r dag =
             res
         )
     );;
+
+let ordonnanceur_avec_heuristique r dag =
+    ordonnanceur_avec_heuristique_et_memoire r 0 dag;;
+
+let ordonnanceur_contrainte_memoire r m dag =
+    ordonnanceur_avec_heuristique_et_memoire r m dag;;
 
