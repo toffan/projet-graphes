@@ -78,7 +78,7 @@ let ordonnanceur_sans_heuristique r dag =
    Sémantique : Marque les noeuds du DAG dans l'ordre de la liste. *)
 let marque_tri l =
     let null =
-    List.fold_right (fun v mark -> Mark.set v mark; (mark+1)) l 1 in ();;
+    List.fold_left (fun mark v -> Mark.set v mark; (mark+1)) 1 l in ();;
 
 (* Entrées :
    - un DAG dag
