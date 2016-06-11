@@ -2,7 +2,7 @@ open Dag.DAG
 
 (* Calcule les sommets de g sans prédecesseurs. *)
 let list_root_vertex g = fold_vertex
-    (fun v l -> if (pred g v) = [] then v::l
+    (fun v l -> if (pred g v) = [] then l@[v]
                 else l
     ) g [];;
 
@@ -17,7 +17,7 @@ let tri_topologique dag =
             ) lp true)
             then (
                 (Printf.printf "Ajoute %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj)));
-                vj::y)
+                y@[vj])
             else (
                 (Printf.printf "Ignore %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj)));
             y)
@@ -34,7 +34,7 @@ let tri_topologique dag =
                 Mark.set vi mark;
                 (* zp : z à l'étape suivante.
                  * yp : y à l'étape suivante. *)
-                let zp = vi::z in
+                let zp = z@[vi] in
                 let yp = (
                     (* ls : liste des successeurs de vi (dans dag). *)
                     let ls = succ dag vi in
