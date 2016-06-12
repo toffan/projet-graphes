@@ -62,14 +62,14 @@ let depend dag v l =
 
 let ordonnanceur_sans_heuristique r dag =
     let l = tri_topologique dag in
-    List.fold_right (fun v trace ->
+    List.rev (List.fold_left (fun trace v ->
         let current = List.hd trace in
         (* Si v a un parent dans current OU si length(current)>=r, on fait un nouvel étage.*)
-        if ((List.length current) >= r || (depend dag v l)) then
+        if ((List.length current) >= r || (depend dag v current)) then
             [v]::trace
         else
-            (v::current)::(List.tl trace)
-    ) l [[]];;
+            (current@[v])::(List.tl trace)
+    ) [[]] l);;
 
 (* Entrées :
    - Une liste de noeuds triés d'un DAG.
