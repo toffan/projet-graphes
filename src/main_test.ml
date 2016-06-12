@@ -13,7 +13,7 @@ let afficher_trace name l =
     Printf.printf "\n";) l;
     Printf.printf "--------------- Fin d'affichage de : %s ---------------\n" name;;
 
-let dag = Dag_test.dag_sujet and name = "dag_sujet";;
+let dag = Dag_test.dag2 and name = "dag2";;
 let r = 3 and m = 3;;
 
 let tri_dag = tri_topologique dag;;
@@ -28,3 +28,8 @@ afficher_trace (String.concat "" ["Ordonnancement avec heuristique de "; name]) 
 afficher_trace (String.concat "" ["Ordonnancement avec contrainte mémoire de "; name]) ord_cm_dag;;
 (*afficher_trace (String.concat "" ["Ordonnancement avec contrainte mémoire et heuristique de "; name]) ord_cm_ah_dag;;*)
 
+(*afficher_liste "succ va2" (succ Dag_test.dag2 Dag_test.va2);;
+afficher_liste "succ vr2" (succ Dag_test.dag2 Dag_test.vr2);;
+afficher_liste "succ ve2" (succ Dag_test.dag2 Dag_test.ve2);;*)
+
+(*iter_vertex (fun v -> Printf.printf "%d : (%s:%d)\n" (Mark.get v) (Dag.DAG.Display.vertex_name v) (Dag.Vertex.memory (V.label v))) Dag_test.dag2;*)
