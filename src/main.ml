@@ -86,15 +86,18 @@ let marque_tri l =
    - unit
    Sémantique :
    - Marque les noeuds avec leur taille de chemin critique (taille du plus long chemin reliant le noeud à un puit). *)
-let marque_chemin_critique dag =
+let marque_chemin_critique dag use_sum =
     let l = list_root_vertex dag in
     let rec aux v = (
         let vdepth = 1 + (
         fold_succ (fun vc d ->
             (* vc : noeud courant du niveau actuel (de successeurs).
              * d : profondeur maximale du niveau actuel.*)
-            (max d (aux vc))
-        ) dag v (-1))
+            if use_sum then
+                (d + (aux vc))
+            else
+                (max d (aux vc))
+        ) dag v (0))
         in Mark.set v vdepth; vdepth)
     in List.iter (fun v -> let null = aux v in ()) l;;
 
@@ -140,10 +143,10 @@ let mem_sum step =
    Sorties:
    - une trace d'execution du DAG
    *)
-let ordonnanceur_avec_heuristique_et_memoire r m dag =
+let ordonnanceur_avec_heuristique_et_memoire r m optimiser_memoire dag =
     let l = tri_topologique dag in (
         (* Marque les noeuds en fonction de leur chemin critique. *)
-        marque_chemin_critique dag;
+        marque_chemin_critique dag optimiser_memoire;
 
         let rec aux todo trace =
             match todo with
@@ -186,8 +189,11 @@ let ordonnanceur_avec_heuristique_et_memoire r m dag =
     );;
 
 let ordonnanceur_avec_heuristique r dag =
-    ordonnanceur_avec_heuristique_et_memoire r 0 dag;;
+    ordonnanceur_avec_heuristique_et_memoire r 0 false dag;;
 
 let ordonnanceur_contrainte_memoire r m dag =
-    ordonnanceur_avec_heuristique_et_memoire r m dag;;
+    ordonnanceur_avec_heuristique_et_memoire r m false dag;;
+
+let ordonnanceur_contrainte_memoire_bonus r m dag =
+    ordonnanceur_avec_heuristique_et_memoire r m true dag;;
 

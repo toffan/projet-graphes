@@ -61,5 +61,5 @@ val ordonnanceur_contrainte_memoire : int -> int -> DAG.t -> trace
    - on suppose une contrainte mémoire (section 4)
    - vous utiliserez une heuristique specifique au cas contraint
    *)
-(*val ordonnanceur_contrainte_memoire_bonus : int -> int -> DAG.t -> trace*)
+val ordonnanceur_contrainte_memoire_bonus : int -> int -> DAG.t -> trace
 
