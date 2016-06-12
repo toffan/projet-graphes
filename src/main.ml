@@ -21,9 +21,7 @@ let tri_topologique dag =
         (* Liste des prédecesseurs de vj dans dag. *)
         let lp = pred dag vj in (
             if (List.fold_right (fun v add ->
-                add && (
-                    ((List.find_all (fun w -> w = v) z) != [])
-                )
+                add && (List.mem v z)
             ) lp true)
             then (
                 (*Printf.printf "Ajoute %d : %s : %d\n" (Mark.get vj) (Dag.DAG.Display.vertex_name vj) (Dag.Vertex.memory (V.label vj));*)
@@ -69,9 +67,7 @@ type trace = (Dag.DAG.vertex list) list
 let depend dag v l =
     let vp = pred dag v in
     (* Calcul de l'intersection de l et vp. *)
-    List.fold_right (fun e res ->
-        res || ((List.find_all (fun x -> x = e) l) != [])
-    ) vp false;;
+    List.fold_right (fun e res -> res || (List.mem e l)) vp false;;
 
 
 (* Entrées:
@@ -157,9 +153,7 @@ let tri_chemin_critique v1 v2 =
 let dependances_satisfaites dag v l =
     let vp = pred dag v in
     (* Calcul de l'intersection de l et vp. *)
-    List.fold_right (fun e res ->
-        res && ((List.find_all (fun x -> x = e) l) != [])
-    ) vp true;;
+    List.fold_right (fun e res -> res && (List.mem e l)) vp true;;
 
 
 (* Entrées :
