@@ -35,10 +35,6 @@
   {\left\{\begin{array}{#1}}
   {\end{array}\right.}
   % }}}
-
-  % {{{ Environnements de programmation
-%\usepackage[outputdir=build]{minted}
-  % }}}
 % }}}
 
 
@@ -62,10 +58,9 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     \begin{itemize}
       \item les noeuds représentent les opérations de \emph{edge collapse} ou
         \emph{vertex split} de notre maillage.
-      \item une opération dépend d'une autre ssi la seconde a modifié des noeuds
-        de notre maillage dont la faisabilité de la première opération dépend.
-        Plus simplement, une opération ne peut avoir lieu que si la liste des
-        noeuds impliqués est à jour.
+      \item une opération B dépend d'une opération A ssi A modifie des sommets
+        du maillage dont dépend l'opération B. Plus simplement, une opération ne
+        peut avoir lieu que si la liste des sommets impliqués est à jour.
     \end{itemize}
 
   \subsection{Question 2}
@@ -77,12 +72,12 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     \[ p_i = \sum_{\substack{v_j \in Pred(v_i) \\ c_j \neq c_i}}{s_j} \]
 
     D'une part, l'équilibrage de charge se traduit par le fait que les couleurs
-    de notre graphe sont à peu près équitablement distribuées en nombre, de
-    sorte que chaque coeur effectue un travail à peu près similaire. D'autre
-    part, pour réduire le coup en communication de notre graphe, on cherchera a
-    mettre de la même couleur des sections de graphes fortement liées. Ainsi, un
-    coeur ne communiquera pas outre mesure avec les autres coeurs car la plupart
-    de ses dépendances ont été traitées par lui-même.
+    de notre graphe sont équitablement distribuées en nombre, de sorte que
+    chaque coeur effectue un travail similaire. D'autre part, pour réduire le
+    coup en communication de notre graphe, on cherchera a mettre de la même
+    couleur des sections de graphes fortement liées. Ainsi, un coeur ne
+    communiquera pas outre mesure avec les autres coeurs car la plupart de ses
+    dépendances ont été traitées par lui-même.
 
     % TODO (bonus)
 
@@ -106,8 +101,8 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     \end{system} \]
 
     Cette formule n'est pas exacte car elle peut nous faire calculer plusieurs
-    fois le même noeud lors d'une étape. Malgré cela, elle nous donne quand même
-    que la complexité du calcul de $\mu$ est $\mathcal{O}(m)$.
+    fois le même noeud lors d'une étape. Néanmoins, elle nous permet d'évaluer
+    la complexité du calcul de $\mu$ comme étant $\mathcal{O}(m)$.
 
     Ensuite, pour $s$ noeuds conservés on a $\dbinom{n}{s}$ choix possibles.
     Ainsi pour tester toutes les solutions on trouve une complexité de
@@ -186,7 +181,7 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     Cependant, on pourra chercher à s'approcher de ce nombre d'étapes en
     effectuant un calcul de ce chemin critique à chaque étape.  En généralisant
     cette idée, on cherchera à effectuer en premier les tâches les plus loin
-    d'un puit. Ainsi, on essaie d'avancer dans l'arbre de la manière la plus
+    d'un puits. Ainsi, on essaie d'avancer dans l'arbre de la manière la plus
     uniforme possible afin de pas garder de chaine séquentielle.
 
   \subsection{Question 12}
@@ -240,6 +235,7 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     Code fourni séparément.
 
   \subsection{Question 16}
+    Pour $M=3$ et $r=2$.
     \begin{multicols}{3}
       \begin{center}
         \includegraphics[width=0.9\linewidth]{fig/graph16a.jpg}
@@ -254,7 +250,7 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
         \item (i:1) (j:1)
         \item (n:3)
       \end{titledenumerate}
-      \emph{Taux d'occupation de 55\%.}
+      \emph{Taux d'occupation de 66\%.}
 
       \begin{titledenumerate}{Ordonnancement $P_2$.}
         \item (g:2)
@@ -263,7 +259,7 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
         \item (c:2) (j:1)
         \item (n:3)
       \end{titledenumerate}
-      \emph{Taux d'occupation de 66\%.}
+      \emph{Taux d'occupation de 80\%.}
     \end{multicols}
 
     On suppose $N$ pair afin de simplifier l'expression. On trouve ainsi
@@ -271,8 +267,51 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     + b_1} + \underbrace{\frac{N-1}{2}}_{b_{2..N}} + \underbrace{1}_{d} =
     \frac{3N}{2} + 1 \]
 
+    Désormais on ordonne les noeuds non plus en fonction de leur
+    distance à un puits mais d'un score heuristique. Un noeud a un score égal à
+    la somme des scores de ses fils plus 1. Ainsi, les puits ont un score de 1
+    et ce score se propage récursivement dans le graphe.
+
+    \newpage
   \subsection{Question 17}
     Code fourni séparément.
+
+    \begin{multicols}{2}
+      \begin{titledenumerate}{1ère heuristique}
+        \item (a:2)
+        \item (b:2)
+        \item (c:2)
+        \item (d:2)
+        \item (e:2)
+        \item (f:2)
+        \item (o:2)
+        \item (p:2)
+        \item (g:2)
+        \item (q:2) (u:1)
+        \item (t:1) (s:1) (m:1)
+        \item (l:1) (k:1) (j:1)
+        \item (i:1) (h:1)
+        \item (r:2)
+        \item (n:3)
+      \end{titledenumerate}
+      \emph{Taux d'occupation de 46\%.}
+
+      \begin{titledenumerate}{2nd heuristique}
+        \item (g:2)
+        \item (a:2) (u:1)
+        \item (b:2) (t:1)
+        \item (c:2) (s:1)
+        \item (d:2) (m:1)
+        \item (e:2) (l:1)
+        \item (f:2) (k:1)
+        \item (o:2) (j:1)
+        \item (p:2) (i:1)
+        \item (q:2) (h:1)
+        \item (r:2)
+        \item (n:3)
+      \end{titledenumerate}
+      \emph{Taux d'occupation de 58\%.}
+    \end{multicols}
 % }}}
 \end{document}
 
