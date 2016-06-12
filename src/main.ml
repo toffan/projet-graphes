@@ -155,15 +155,15 @@ let ordonnanceur_avec_heuristique_et_memoire r m dag =
                         let (r, n) = accu in
                         if (dependances_satisfaites dag v (List.flatten trace)) then
                             (* Ajout de v dans r selon le tri par chemin critique décroissant. *)
-                            ((List.merge (tri_chemin_critique) r [v]), n)
+                            ((List.merge (tri_chemin_critique) [v] r), n)
                         else
                             (* On ajoute v à la liste des noeuds restants à traiter. *)
-                            (r, n@[v])
+                            (r, v::n)
                     ) todo ([],[])
                 in
                 (* Ajout des r premiers sommets de ready dans current. *)
                 let (current,surplus) =
-                    List.fold_right (fun v accu ->
+                    List.fold_left (fun accu v ->
                         let (c,s) = accu in
                         if List.length c < r then (
                             if m > 0 then (
@@ -175,8 +175,8 @@ let ordonnanceur_avec_heuristique_et_memoire r m dag =
                             else (c@[v],s)
                         )
                         else (c,s@[v])
-                    ) ready ([],[])
-                in aux (surplus@next) (current::trace))
+                    ) ([],[]) ready
+                in aux (surplus@next) (trace@[current]))
         in let res = aux l [] in (
             (* Restaure le marquage des noeuds en fonction de leur ordre topologique. *)
             marque_tri l;
