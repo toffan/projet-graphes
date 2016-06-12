@@ -88,15 +88,15 @@ let marque_tri l =
    - Marque les noeuds avec leur taille de chemin critique (taille du plus long chemin reliant le noeud à un puit). *)
 let marque_chemin_critique dag =
     let l = list_root_vertex dag in
-    let rec aux depth v = (
-        let vdepth = (
+    let rec aux v = (
+        let vdepth = 1 + (
         fold_succ (fun vc d ->
             (* vc : noeud courant du niveau actuel (de successeurs).
              * d : profondeur maximale du niveau actuel.*)
-            ((max d (aux d vc))+1)
-        ) dag v depth)
+            (max d (aux vc))
+        ) dag v (-1))
         in Mark.set v vdepth; vdepth)
-    in List.iter (fun v -> let null = aux 0 v in ()) l;;
+    in List.iter (fun v -> let null = aux v in ()) l;;
 
 (* Fonction de tri par taille de chemin critique.
  * Entrées :
