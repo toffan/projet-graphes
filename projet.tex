@@ -18,6 +18,16 @@
 \titleformat{\subsection}{\large\raggedright}{}{0em}{}[\titlerule]
 \titleformat{\subsubsection}{\large\bfseries\raggedright}{}{0em}{}
 
+\newenvironment{titleditemize}[1]
+  {\paragraph{#1} \begin{itemize}}
+  {\end{itemize}}
+\newenvironment{titledenumerate}[1]
+  {\paragraph{#1} \begin{enumerate}}
+  {\end{enumerate}}
+\newenvironment{titleddescription}[1]
+  {\paragraph{#1} \begin{description}}
+  {\end{description}}
+
 
   % {{{ Environnements mathématique
 \usepackage{amsmath}
@@ -28,39 +38,6 @@
 
   % {{{ Environnements de programmation
 \usepackage[outputdir=build]{minted}
-  % }}}
-% }}}
-
-% {{{ Templates
-  % {{{ Figures
-% figure classique
-% \begin{figure}[!h]
-%   \begin{center}
-%     \includegraphics[width=\0.7linewidth]{fig/}
-%     \caption{}
-%   \end{center}
-% \end{figure}
-
-% figures cote à cote
-% \begin{figure}[!h]
-%   \begin{center}
-%     \begin{minipage}[b]{0.4\textwidth}
-%       \includegraphics[width=\textwidth]{fig/}
-%       \caption{}
-%     \end{minipage}
-%     \hfill
-%     \begin{minipage}[b]{0.4\textwidth}
-%       \includegraphics[width=\textwidth]{fig/}
-%       \caption{}
-%     \end{minipage}
-%   \end{center}
-% \end{figure}
-
-% figure dans un environnement multicol
-% \begin{center}
-%   \includegraphics[width=0.9\linewidth]{}
-%   \captionof{figure}{}
-% \end{center}
   % }}}
 % }}}
 
@@ -89,11 +66,6 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
         de notre maillage dont la faisabilité de la première opération dépend.
         Plus simplement, une opération ne peut avoir lieu que si la liste des
         noeuds impliqués est à jour.
-      % \item les noeuds représentent les noeuds qui existaient, existent ou
-      %   existeront dans notre maillage.
-      % \item un noeud dépend d'un autre ssi la création ou destruction de ce
-      %   premier requière la présence du second. Plus simplement, une opération
-      %   ne peut avoir lieu que si la liste des noeuds impliqués est à jour.
     \end{itemize}
 
   \subsection{Question 2}
@@ -115,46 +87,45 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     % TODO (bonus)
 
   \subsection{Question 3}
-    Si un processeur commet une faute mais est immédiatement capable de la
-    détecter alors il suffit de rejouer la tâche corrompue. En effet, le
-    coeur est en mesure de conserver les paramètres initiaux de la tâche,
-    vérifier si celle-ci s'est correctement exécutée puis de la rejouer si
-    celle-ci s'avère fausse.
+    Si un processeur ne conserve pas les paramètres initiaux d'une tâche alors
+    il devra les recalculer en cas d'erreur. Ainsi, il devra donc rejouer
+    $Pred^*(v)$ avec $v$ la tâche corrompue.
 
-    \begin{center}
-      \rule{0.5\linewidth}{0.1mm}
+    En revanche, si l'ensemble des résultats est stocké alors seule la tâche
+    fausse est à rejouer donc $\mu = 1$.
 
-      \emph{On supposera par la suite que la détection d'erreur n'est pas
-      immédiate mais ne se produit qu'après la transmission du résultat.}
-    \end{center}
+    Pour évaluer la complexité de l'algorithme en bruteforce on commence par
+    évaluer la complexité du calcul de $\mu$. On se place à $m$, $n$, et $s$
+    fixés. Afin de simplifier les calculs on oublie la structure de DAG pour
+    considérer un graphe quelconque. On défini ainsi deux suites $(S_n)$ et
+    $(U_n)$ respectivement les nombre de noeuds connus et le nombre de noeuds
+    à calculer lors de l'étape $i$ et définies ainsi.
+    \[ \begin{system}{ll}
+      S_0 = s ; & S_{i+1} = S_i + U_i \\
+      U_0 = 1 ; & U_{i+1} = U_i \frac{m}{n} (1 - \frac{S_i}{n})
+    \end{system} \]
 
-    Si un processeur commet une faute alors tous les successeurs de la tâche
-    corrompue doivent être recalculés. Cependant, puisque les résultats
-    intermédiaires ne sont pas conservés alors l'ensemble des prédécesseurs des
-    successeurs de ce noeud doit être traité à nouveau, soit à peu près tout le
-    graphe.  Si on nomme $v$ le noeud corrompu, alors l'ensemble des noeuds à
-    recalculer est $Pred^{*}(Succ^{*}(v))$.
+    Cette formule n'est pas exacte car elle peut nous faire calculer plusieurs
+    fois le même noeud lors d'une étape. Malgré cela, elle nous donne quand même
+    que la complexité du calcul de $\mu$ est $\mathcal{O}(m)$.
 
-    Si l'ensemble des résultats sont stockés alors seul l'ensemble des résultats
-    potentiellement corrompus est à recalculer, soit $Succ^{*}(v)$ que nous
-    allons approximer.
-    Soit $n = \#\mathcal{V}$ et $m = \#\mathcal{E}$ alors chaque noeud possède
-    en moyenne $\frac{m}{n}$ successeurs.
+    Ensuite, pour $s$ noeuds conservés on a $\dbinom{n}{s}$ choix possibles.
+    Ainsi pour tester toutes les solutions on trouve une complexité de
+    $\mathcal{O}(\dbinom{n}{s}m)$.
 
-    % TODO
+    % TODO (bonus)
 % }}}
 \section{Ordonnancement séquentiel}
 % {{{
   \subsection{Question 4}
-    Dans le cas d'un ordonnancement séquentiel, l'ensemble des opérations sont
-    effectuées par un unique coeur et le graphe est à un unique point en
-    mémoire. Ainsi, il n'y a plus de coût de communication, le temps d'exécution
-    est donc linéaire en le nombre de tâches à exécuter. De plus, le coeur étant
-    seul, il lui suffit d'effectuer les tâches en respectant la chaine de
-    dépendances.
+    Dans le cas d'un ordonnancement séquentiel, les opérations sont toutes
+    effectuées par un unique coeur. Ainsi, il n'y a plus de coût de
+    communication nous donnant un temps d'exécution linéaire en le nombre de
+    tâches à exécuter. Le coeur étant seul, il lui suffit donc d'effectuer les
+    tâches en respectant la chaine de dépendances.
 
   \subsection{Question 5}
-    Premièrement, les trois états données forment bien une partition de
+    Premièrement, les trois états donnés forment bien une partition de
     l'ensemble des noeuds, c'est à dire que tout noeud appartient à un unique
     état.
 
@@ -188,18 +159,121 @@ Ordonnancement parallèle de tâches sur un graphe orienté acyclique}
     l'utilisation d'une file induit un parcours en largeur.
 
   \subsection{Question 7}
-    \begin{minted}{ocaml}
-(* code *)
-let f = fun x y -> x + y;;
-    \end{minted}
+    Code fourni séparément.
+
 % }}}
 \section{Ordonnancement parallèle}
 % {{{
+  \subsection{Question 8}
+    Pour $n$ noeuds et $r$ ressources on a une borne inférieur en $\frac{n}{r}$
+    du temps d'exécution. Dans ce cas, toutes les ressources sont pleinement
+    utilisées tout au long des différentes étapes.
+
+    Une limite à $r$ ressources force à ne pas effectuer plus de $r$ opérations
+    à la fois, donc à limiter les étapes à des listes de $r$ éléments au
+    maximum.
+
+  \subsection{Question 9}
+    Code fourni séparément.
+
+  \subsection{Question 10}
+    Résultats comparatifs à la question 13.
+
+  \subsection{Question 11}
+    Dans l'exécution d'un DAG, il n'y aura jamais moins d'étapes que la longueur
+    du chemin critique car chaque noeud de celui-ci doit être effectué
+    strictement après son prédécesseur et strictement avant sont successeur.
+    Cependant, on pourra chercher à s'approcher de ce nombre d'étapes en
+    effectuant un calcul de ce chemin critique à chaque étape.  En généralisant
+    cette idée, on cherchera à effectuer en premier les tâches les plus loin
+    d'un puit. Ainsi, on essaie d'avancer dans l'arbre de la manière la plus
+    uniforme possible afin de pas garder de chaine séquentielle.
+
+  \subsection{Question 12}
+    Code fourni séparément.
+
+  \subsection{Question 13}
+    \begin{multicols}{2}
+      \begin{titledenumerate}{Ordonnancement de dag1 sans heuristique}
+        \item (s:1) (b:1) (j:1)
+        \item (n:1) (q:1) (k:1)
+        \item (p:1)
+        \item (g:1) (i:1)
+        \item (h:1) (f:1) (d:1)
+        \item (c:1) (o:1) (m:1)
+        \item (l:1) (e:1)
+        \item (r:1)
+      \end{titledenumerate}
+      \emph{Taux d'occupation de 75\%}
+
+      \begin{titledenumerate}{Ordonnancement de dag1 avec heuristique}
+        \item (s:1) (j:1) (b:1)
+        \item (p:1) (n:1) (q:1)
+        \item (i:1) (g:1) (k:1)
+        \item (d:1) (h:1) (f:1)
+        \item (e:1) (c:1) (o:1)
+        \item (m:1) (l:1) (r:1)
+      \end{titledenumerate}
+      \emph{Taux d'occupation de 100\%}
+    \end{multicols}
+
+    Dans l'exemple dag1, on remarque que notre heuristique nous fourni un bien
+    meilleur résultat. La différence se voit notamment lors de l'étape 2.
+
+    Sans heuristique, notre algorithme calcule (k:1) alors que (p:1) est
+    disponible. Cependant, (p:1) est nécessaire pour les calculs suivants et
+    doit être exécuté seul à l'étape d'après.
+
+    Avec notre heuristique, l'algorithme tient compte du fait que (p:1) soit
+    nécessaire par la suite et cherchera donc à le calculer au plus tôt et à
+    laisser (k:1) pour plus tard.
+
 % }}}
 \section{Ordonnancement parallèle sous contrainte}
 % {{{
-% }}}
+  \subsection{Question 14}
+    Dans le cas d'une exécution séquentielle, la contrainte sur la mémoire
+    utilisée n'est plus étape par étape mais tâche par tâche. Ainsi on obtient
+    \[ (C): \forall i, m_i \leq M \]
 
+  \subsection{Question 15}
+    Code fourni séparément.
+
+  \subsection{Question 16}
+    \begin{multicols}{3}
+      \begin{center}
+        \includegraphics[width=0.9\linewidth]{fig/graph16a.jpg}
+        \captionof{figure}{Graphe de test.}
+      \end{center}
+
+      \begin{titledenumerate}{Ordonnancement $P_1$.}
+        \item (a:2)
+        \item (b:2)
+        \item (g:2)
+        \item (c:2) (h:1)
+        \item (i:1) (j:1)
+        \item (n:3)
+      \end{titledenumerate}
+      \emph{Taux d'occupation de 55\%.}
+
+      \begin{titledenumerate}{Ordonnancement $P_2$.}
+        \item (g:2)
+        \item (a:2) (h:1)
+        \item (b:2) (i:1)
+        \item (c:2) (j:1)
+        \item (n:3)
+      \end{titledenumerate}
+      \emph{Taux d'occupation de 66\%.}
+    \end{multicols}
+
+    On suppose $N$ pair afin de simplifier l'expression. On trouve ainsi
+    \[ \underbrace{N-1}_{a_{1..N-1}} + \underbrace{1}_{c} + \underbrace{1}_{a_N
+    + b_1} + \underbrace{\frac{N-1}{2}}_{b_{2..N}} + \underbrace{1}_{d} =
+    \frac{3N}{2} + 1 \]
+
+  \subsection{Question 17}
+    Code fourni séparément.
+% }}}
 \end{document}
 
 % vim: set spelllang=fr:
